@@ -14,14 +14,14 @@
 struct Bits {
     unsigned b0:1, b1:1, b2:1, b3:1, b4:1, b5:1, b6:1, b7:1;
 };
-union Cbits {
+union Bytes {
     struct Bits bits;
     unsigned char byte;
 };
 
 uint32_t sum_primes(uint16_t n);
-unsigned char get_bit_value(uint16_t i, union Cbits *primes);
-void set_bit_value(uint16_t i, unsigned value, union Cbits *primes);
+unsigned char get_bit_value(uint16_t i, union Bytes *primes);
+void set_bit_value(uint16_t i, unsigned value, union Bytes *primes);
 
 /************************************************************************************
  *   
@@ -31,8 +31,8 @@ void set_bit_value(uint16_t i, unsigned value, union Cbits *primes);
 ************************************************************************************/
 int main(void) {
     //Test inputs and expected outputs
-    uint16_t inputs[] = {0, 2, 17, 32, 258, 30359};
-    uint32_t outputs[] = {0, 2, 58, 160, 6338, 46762292};
+    uint16_t inputs[] = {0, 2, 17, 32, 258, 30359, 65000};
+    uint32_t outputs[] = {0, 2, 58, 160, 6338, 46762292, 199091012};
     uint32_t sum = 0;
 
     uint16_t size = sizeof(inputs) / sizeof(inputs[0]);
@@ -65,7 +65,7 @@ uint32_t sum_primes(uint16_t n) {
     uint32_t sum = 0;
 
     //Create an array from 2 to n and set all values to true
-    union Cbits primes[(n + 6) / 8]; 
+    union Bytes primes[(n + 6) / 8]; 
     memset(primes, 255, ((n+6)/8) * sizeof(primes[0]));
 
     //Use the Sieve of Eratosthenes to find all primes up to n
@@ -97,35 +97,35 @@ uint32_t sum_primes(uint16_t n) {
  * @returns value of ith bit in params (0 or 1)
  *  
 ************************************************************************************/
-unsigned char get_bit_value(uint16_t i, union Cbits *primes) {
-    unsigned char rbit = 0;
+unsigned char get_bit_value(uint16_t i, union Bytes *primes) {
+    unsigned char value = 0;
     switch (i%8) {
         case 0:
-            rbit = primes[i/8].bits.b0;
+            value = primes[i/8].bits.b0;
             break;
         case 1:
-            rbit = primes[i/8].bits.b1;
+            value = primes[i/8].bits.b1;
             break;
         case 2:
-            rbit = primes[i/8].bits.b2;
+            value = primes[i/8].bits.b2;
             break;
         case 3:
-            rbit = primes[i/8].bits.b3;
+            value = primes[i/8].bits.b3;
             break;
         case 4: 
-            rbit = primes[i/8].bits.b4;
+            value = primes[i/8].bits.b4;
             break;
         case 5:
-            rbit = primes[i/8].bits.b5;
+            value = primes[i/8].bits.b5;
             break;
         case 6:
-            rbit = primes[i/8].bits.b6;
+            value = primes[i/8].bits.b6;
             break;
         case 7:
-            rbit = primes[i/8].bits.b7;
+            value = primes[i/8].bits.b7;
             break;
     }
-    return rbit;
+    return value;
 }
 
 /************************************************************************************
@@ -136,7 +136,7 @@ unsigned char get_bit_value(uint16_t i, union Cbits *primes) {
  * @param primes array of bits representing numbers
  *  
 ************************************************************************************/
-void set_bit_value(uint16_t i, unsigned value, union Cbits *primes) {
+void set_bit_value(uint16_t i, unsigned value, union Bytes *primes) {
     switch (i%8) {
         case 0:
             primes[i/8].bits.b0 = value;
