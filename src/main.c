@@ -44,6 +44,7 @@ int main(void) {
         }
         else {
             printf("ERR: incorrect sum: %d (Should be %d)\n", sum, outputs[i]);
+            return 1;
         }
     }
     return 0;
